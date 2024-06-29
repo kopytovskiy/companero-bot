@@ -1,0 +1,5 @@
+# This is a CODEOWNERS file for GitHub
+# It specifies who has the ability to review and approve changes to files in the repository
+
+# Full access for all files in the repository:
+* @kopytovskiy
