@@ -1,0 +1,14 @@
+package com.companerobot.enums;
+
+public enum UserStatus {
+
+    WAITING_USER_LOCALIZATION,
+    WAITING_USER_CONTACT,
+    WAITING_ROLE,
+    ACTIVE,
+    IN_SETTINGS_MENU,
+    EDIT_USER_NAME,
+    EDIT_PHONE_NUMBER,
+    EDIT_SHARE_PHONE_NUMBER,
+    BANNED
+}
