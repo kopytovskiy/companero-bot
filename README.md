@@ -1,7 +1,7 @@
 <div align="center"><img width="200" alt="Companero" src="https://companero.io/assets/images/logo/logo.png"/></div>
 <br/>
 <p align="center">
-   <i>Compañero is an open-source hitchhiking service. Find a travel companion without any expenses!</i>
+   <i>Compañero is an open-source ridesharing and hitchhiking service. Find a travel companion without any expenses!</i>
    <br/>
    POC: <a href="https://t.me/CompaneroBot">https://t.me/CompaneroBot</a>
    <br/><br/>
