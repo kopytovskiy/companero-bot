@@ -30,6 +30,7 @@
 * **Free**. Compañero is completely free and open-source.
 * **Cross-plarform**. Use it on any device where Telegram is installed.
 * **Simplicity**. Request a ride just in several clicks and all drivers near-by will recieve it.
+* **Price calculation**. You can always rely on our price calculations or set your own price, even request a free ride!
 
 ## How It Works
 1. You set up a profile and choose a role (driver or passenger).
