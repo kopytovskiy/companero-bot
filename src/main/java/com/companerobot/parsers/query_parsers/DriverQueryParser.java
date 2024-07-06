@@ -5,17 +5,20 @@ import com.companerobot.enums.OrderStatus;
 import com.companerobot.enums.OrderType;
 import com.companerobot.helpers.CipherHelper;
 import com.companerobot.helpers.LocalizationHelper;
+import com.companerobot.helpers.MessageExecutionHelper;
 import com.companerobot.keyboards.InlineKeyboardHelper;
 import com.companerobot.keyboards.ReplyKeyboardHelper;
 import com.companerobot.misc.DriverCollection;
 import com.companerobot.misc.OrderCollection;
+import com.companerobot.misc.ReviewCollection;
 import com.companerobot.misc.UserCollection;
 import org.bson.Document;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.message.MaybeInaccessibleMessage;
 
 import java.util.Objects;
 
-import static com.companerobot.constants.Callbacks.ACCEPT_ORDER_CALLBACK;
+import static com.companerobot.constants.Callbacks.*;
 import static com.companerobot.constants.HookMessages.*;
 import static com.companerobot.constants.TextMessages.*;
 import static com.companerobot.enums.OrderStatus.*;
@@ -34,8 +37,16 @@ public class DriverQueryParser {
         Long driverId = update.getCallbackQuery().getFrom().getId();
         CountryCode driverLocale = UserCollection.getUserLocale(driverId);
 
+
         if (callbackData.equals(ACCEPT_ORDER_CALLBACK)) {
             acceptOrder(update, messageText, driverId, driverLocale);
+
+        } else if (callbackData.equals(LIKE_RIDE_CALLBACK)) {
+            addReviewOnPassenger(update, messageText, driverId, driverLocale, true);
+
+        } else if (callbackData.equals(DISLIKE_RIDE_CALLBACK)) {
+            addReviewOnPassenger(update, messageText, driverId, driverLocale, false);
+
         }
     }
 
@@ -212,4 +223,20 @@ public class DriverQueryParser {
         DriverCollection.setIsWaitingForNewTrip(driverId, false);
     }
 
+
+    private static void addReviewOnPassenger(Update update, String messageText, Long driverId, CountryCode driverLocale, boolean isLiked) {
+        MaybeInaccessibleMessage message = update.getCallbackQuery().getMessage();
+
+        String orderId = messageText.substring(
+                messageText.indexOf(LocalizationHelper.getValueByCode(ORDER_ID_PART_MESSAGE, driverLocale))
+                        + LocalizationHelper.getValueByCode(ORDER_ID_PART_MESSAGE, driverLocale).length(),
+                messageText.indexOf("\n"));
+
+
+        Document order = OrderCollection.getOrderByOrderId(orderId);
+        Long passengerId = Long.valueOf(order.get("userId").toString());
+
+        ReviewCollection.addUserReview(passengerId, driverId, isLiked);
+        MessageExecutionHelper.editMessage(message, LocalizationHelper.getValueByCode(AFTER_RATE_MESSAGE, driverLocale));
+    }
 }

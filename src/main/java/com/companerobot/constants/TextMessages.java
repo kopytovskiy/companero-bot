@@ -38,6 +38,10 @@ public class TextMessages {
 
     public static final String CHOOSE_ROLE_MESSAGE = "choose.role.message";
 
+    public static final String AFTER_RATE_MESSAGE = "after.rate.message";
+
+
+    //PASSENGER MESSAGES
     public static final String PASSENGER_ROLE_WELCOME_MESSAGE = "passenger.role.welcome.message";
 
     public static final String REQUEST_PICKUP_POINT_PASSENGER_MESSAGE = "request.pickup.point.passenger.message";
@@ -89,6 +93,9 @@ public class TextMessages {
     public static final String DECLINED_POSTPONED_TRIP_FOR_PASSENGER_MESSAGE = "declined.postponed.trip.for.passenger.message";
 
     public static final String CONFIRMED_POSTPONED_TRIP_FOR_PASSENGER_MESSAGE = "confirmed.postponed.trip.for.passenger.message";
+
+    public static final String ADD_REVIEW_ON_DRIVER_FOR_PASSENGERS_MESSAGE = "add.review.on.driver.for.passengers.message";
+
 
     //DRIVER
     public static final String REQUEST_DRIVER_LOCATION_MESSAGE = "request.driver.location.message";
@@ -150,6 +157,9 @@ public class TextMessages {
     public static final String CONFIRMED_POSTPONED_TRIP_FOR_DRIVER_MESSAGE = "confirmed.postponed.trip.for.driver.message";
 
     public static final String DEPARTURE_DETAILS_MESSAGE = "departure.details.message";
+
+    public static final String ADD_REVIEW_ON_PASSENGER_FOR_DRIVERS_MESSAGE = "add.review.on.passenger.for.drivers.message";
+
 
     //USER MANAGEMENT
     public static final String SHOW_ALL_USER_DATA_MESSAGE = "show.all.user.data.message";

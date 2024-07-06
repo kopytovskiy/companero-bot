@@ -11,6 +11,9 @@ import org.bson.Document;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.message.MaybeInaccessibleMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
@@ -21,6 +24,7 @@ import static com.companerobot.constants.TextMessages.NEW_ORDER_FREE_RIDE_MESSAG
 import static com.companerobot.constants.TextMessages.NEW_ORDER_MESSAGE;
 import static com.companerobot.constants.TextValues.NOW_VALUE;
 import static com.companerobot.enums.OrderType.IMMEDIATE;
+import static java.lang.Math.toIntExact;
 
 public class MessageExecutionHelper {
 
@@ -108,6 +112,23 @@ public class MessageExecutionHelper {
     public static void sendMessageExecutor(SendMessage sendMessage) {
         try {
             telegramClient.executeAsync(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void editMessage(MaybeInaccessibleMessage message, String text) {
+        long messageId = message.getMessageId();
+        long chatId = message.getChatId();
+
+        EditMessageText updatedMessage = EditMessageText.builder()
+                .chatId(chatId)
+                .messageId(toIntExact(messageId))
+                .text(text)
+                .build();
+
+        try {
+            telegramClient.executeAsync(updatedMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
