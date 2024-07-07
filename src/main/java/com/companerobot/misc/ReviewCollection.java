@@ -1,15 +1,17 @@
 package com.companerobot.misc;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.*;
 import org.bson.Document;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.companerobot.misc.MongoBaseClass.database;
+import static com.mongodb.client.model.Aggregates.*;
+
 
 public class ReviewCollection {
 
@@ -18,22 +20,25 @@ public class ReviewCollection {
     public static void addNewUserToReviewDB(Long userId) {
         Document document = new Document();
         document.put("userId", userId);
+        document.put("rating", 0);
         document.put("reviews", new ArrayList<>());
         reviewCollection.insertOne(document);
     }
 
     public static void addUserReview(Long userId, Long reviewerId, boolean isLiked) {
 
-        if(!isUserHasReviews(userId)) {
+        if (!isUserHasReviews(userId)) {
             addNewUserToReviewDB(userId);
         }
 
-        if(!isReviewerIdReviewed(userId, reviewerId)) {
+        if (!isReviewerAlreadyAddedReview(userId, reviewerId)) {
             addNewReview(userId, reviewerId, isLiked);
 
         } else {
             updateOldReview(userId, reviewerId, isLiked);
         }
+
+        updateUserRating(userId);
     }
 
     private static void addNewReview(Long userId, Long reviewerId, boolean isLiked) {
@@ -63,7 +68,46 @@ public class ReviewCollection {
         return user != null;
     }
 
-    public static boolean isReviewerIdReviewed(Long userId, Long reviewerId) {
+    private static int getUserLikesAmount(Long userId) {
+        Document result = reviewCollection.aggregate(Arrays.asList(
+                match(Filters.eq("userId", userId)),
+                unwind("$reviews"),
+                match(Filters.eq("reviews.isLiked", true)),
+                count())).first();
+
+        if (result != null) {
+            return result.getInteger("count");
+        } else {
+            return 0;
+        }
+    }
+
+    private static int getUserReviewsAmount(Long userId) {
+        Document result = reviewCollection.find(Filters.eq("userId", userId))
+                .projection(Projections.computed("reviewsSize",
+                        new Document("$size", "$reviews"))).first();
+
+        if (result != null) {
+            return result.getInteger("reviewsSize");
+        } else {
+            return 0;
+        }
+    }
+
+    public static void updateUserRating(Long userId) {
+
+        double userReviewsAmount = getUserReviewsAmount(userId);
+        double userLikesAmount = getUserLikesAmount(userId);
+
+        double rating = new BigDecimal(userLikesAmount / userReviewsAmount * 10).
+                setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+        reviewCollection.updateOne(Filters.eq("userId", userId),
+                Updates.set("rating", rating));
+
+    }
+
+    public static boolean isReviewerAlreadyAddedReview(Long userId, Long reviewerId) {
         Document isReviewerIdReviewed = reviewCollection.find(
                 Filters.and(
                         Filters.eq("userId", userId),

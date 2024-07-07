@@ -86,7 +86,6 @@ public class DriverLocationParser {
     private static void sendLocationToPassenger(Message message, Document order, Long driverId, CountryCode driverLocale) {
         String currentDriverLocation = String.format("%s,%s", message.getLocation().getLongitude(), message.getLocation().getLatitude());
 
-
         String destinationAddressLatitude = CipherHelper.decrypt(order.get("destinationAddressLatitude").toString());
         String destinationAddressLongitude = CipherHelper.decrypt(order.get("destinationAddressLongitude").toString());
         String passengerPickupPoint = String.format("%s,%s", destinationAddressLongitude, destinationAddressLatitude);
