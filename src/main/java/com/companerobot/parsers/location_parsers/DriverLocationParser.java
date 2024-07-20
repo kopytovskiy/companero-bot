@@ -10,6 +10,7 @@ import com.companerobot.keyboards.InlineKeyboardHelper;
 import com.companerobot.keyboards.ReplyKeyboardHelper;
 import com.companerobot.misc.DriverCollection;
 import com.companerobot.misc.OrderCollection;
+import com.companerobot.misc.ReviewCollection;
 import com.companerobot.misc.UserCollection;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
@@ -106,25 +107,49 @@ public class DriverLocationParser {
 
         String passengerUserTag = UserCollection.getUserTag(passengerId);
         boolean isPhoneNumberHidden = Boolean.parseBoolean(UserCollection.getIsPhoneNumberHidden(passengerId));
+        int passengerReviewsAmount = ReviewCollection.getUserReviewsAmount(passengerId);
 
-        if (passengerUserTag == null) { //TODO: Refactor to StringBuilder
-            if (isPhoneNumberHidden) {
-                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_TAG_AND_NUMBER_MESSAGE, driverLocale).formatted(passengerName));
-            } else {
-                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber));
-            }
-        } else {
-            if (isPhoneNumberHidden) {
-                sendMessageExecutor(
-                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_NUMBER_MESSAGE, driverLocale).formatted(passengerName))
-                );
+        StringBuilder passengerInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(PASSENGER_INFO_BASE_MESSAGE, driverLocale).formatted(passengerName));
 
-            } else {
-                sendMessageExecutor(
-                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber))
-                );
-            }
+        if (!isPhoneNumberHidden) {
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_PHONE_NUMBER_MESSAGE, driverLocale).formatted(passengerPhoneNumber));
         }
+
+        if (passengerReviewsAmount >= 10) {
+            passengerInfoMessage.append(ReviewCollection.getUserRating(passengerId)).append("/10");
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_REVIEWS_AMOUNT_MESSAGE, driverLocale).formatted(passengerReviewsAmount));
+        }
+
+        if (isPhoneNumberHidden && passengerUserTag == null) {
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_MISSING_CONTACTS_MESSAGE, driverLocale));
+        }
+
+        if (passengerUserTag == null) {
+            sendMessageToUser(driverId, passengerInfoMessage.toString());
+        } else {
+            sendMessageExecutor(
+                    InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, passengerInfoMessage.toString())
+            );
+        }
+
+//        if (passengerUserTag == null) { //TODO: Refactor to StringBuilder
+//            if (isPhoneNumberHidden) {
+//                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_TAG_AND_NUMBER_MESSAGE, driverLocale).formatted(passengerName));
+//            } else {
+//                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber));
+//            }
+//        } else {
+//            if (isPhoneNumberHidden) {
+//                sendMessageExecutor(
+//                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_NUMBER_MESSAGE, driverLocale).formatted(passengerName))
+//                );
+//
+//            } else {
+//                sendMessageExecutor(
+//                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber))
+//                );
+//            }
+//        }
 
         sendMessageExecutor(ReplyKeyboardHelper.driverAcceptedOrderKeyboard(driverId, LocalizationHelper.getValueByCode(FUTURE_ARRIVAL_REMINDER_MESSAGE, driverLocale)
                 .formatted(LocalizationHelper.getValueByCode(CONFIRM_ARRIVAL_HOOK_MESSAGE, driverLocale))));

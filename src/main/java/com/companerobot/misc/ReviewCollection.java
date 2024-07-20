@@ -82,7 +82,7 @@ public class ReviewCollection {
         }
     }
 
-    private static int getUserReviewsAmount(Long userId) {
+    public static int getUserReviewsAmount(Long userId) {
         Document result = reviewCollection.find(Filters.eq("userId", userId))
                 .projection(Projections.computed("reviewsSize",
                         new Document("$size", "$reviews"))).first();
@@ -104,7 +104,12 @@ public class ReviewCollection {
 
         reviewCollection.updateOne(Filters.eq("userId", userId),
                 Updates.set("rating", rating));
+    }
 
+    public static double getUserRating(Long userId) {
+            return reviewCollection.find(Filters.eq("userId", userId))
+                    .first()
+                    .getDouble("rating");
     }
 
     public static boolean isReviewerAlreadyAddedReview(Long userId, Long reviewerId) {
