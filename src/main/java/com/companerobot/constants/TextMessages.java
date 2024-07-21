@@ -60,9 +60,7 @@ public class TextMessages {
 
     public static final String PRICE_ERROR_OTHER_MESSAGE = "price.error.other.message";
 
-    public static final String CONFIRMATION_PASSENGER_ORDER_MESSAGE = "confirmation.passenger.order.message";
-
-    public static final String CONFIRMATION_PASSENGER_ORDER_FREE_RIDE_MESSAGE = "confirmation.passenger.order.free.ride.message";
+    public static final String CONFIRMATION_PASSENGER_ORDER_BASE_MESSAGE = "confirmation.passenger.order.base.message";
 
     public static final String CONFIRMATION_REMINDER_MESSAGE = "confirmation.reminder.message";
 
