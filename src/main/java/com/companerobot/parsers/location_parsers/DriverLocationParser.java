@@ -126,6 +126,8 @@ public class DriverLocationParser {
             passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_MISSING_CONTACTS_MESSAGE, driverLocale));
         }
 
+        passengerInfoMessage.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, driverLocale));
+
         if (passengerUserTag == null) {
             sendMessageToUser(driverId, passengerInfoMessage.toString());
         } else {
