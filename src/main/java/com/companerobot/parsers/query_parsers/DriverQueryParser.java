@@ -37,16 +37,10 @@ public class DriverQueryParser {
         Long driverId = update.getCallbackQuery().getFrom().getId();
         CountryCode driverLocale = UserCollection.getUserLocale(driverId);
 
-
-        if (callbackData.equals(ACCEPT_ORDER_CALLBACK)) {
-            acceptOrder(update, messageText, driverId, driverLocale);
-
-        } else if (callbackData.equals(LIKE_RIDE_CALLBACK)) {
-            addReviewOnPassenger(update, messageText, driverId, driverLocale, true);
-
-        } else if (callbackData.equals(DISLIKE_RIDE_CALLBACK)) {
-            addReviewOnPassenger(update, messageText, driverId, driverLocale, false);
-
+        switch (callbackData) {
+            case ACCEPT_ORDER_CALLBACK -> acceptOrder(update, messageText, driverId, driverLocale);
+            case LIKE_RIDE_CALLBACK -> addReviewOnPassenger(update, messageText, driverId, driverLocale, true);
+            case DISLIKE_RIDE_CALLBACK -> addReviewOnPassenger(update, messageText, driverId, driverLocale, false);
         }
     }
 
@@ -94,34 +88,67 @@ public class DriverQueryParser {
         String driverCarColor = driverInfo.get("carColor").toString();
         String driverCarNumber = CipherHelper.decrypt(driverInfo.get("carNumber").toString());
 
-        String userTag = update.getCallbackQuery().getFrom().getUserName();
-        boolean isPhoneNumberHidden = Boolean.parseBoolean(UserCollection.getIsPhoneNumberHidden(driverId));
+        int driverReviewsAmount = ReviewCollection.getUserReviewsAmount(passengerId);
+        double driverRating = ReviewCollection.getUserRating(passengerId);
 
-        if (userTag == null) { //TODO: Refactor to StringBuilder
-            if (!Objects.equals(UserCollection.getUserTag(driverId), userTag)) {
-                UserCollection.updateUserTag(driverId, userTag);
-            }
-
-            if (isPhoneNumberHidden) {
-                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(MISSING_USER_TAG_WITHOUT_NUMBER_DRIVER_WARN_MESSAGE, driverLocale));
-                sendMessageToUser(passengerId, LocalizationHelper.getValueByCode(DRIVER_FOUND_WITHOUT_TAG_AND_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber));
-            } else {
-                sendMessageToUser(passengerId, LocalizationHelper.getValueByCode(DRIVER_FOUND_WITH_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber, driverPhoneNumber));
-            }
-        } else {
-            if (!Objects.equals(UserCollection.getUserTag(driverId), userTag)) {
-                UserCollection.updateUserTag(driverId, userTag);
-            }
-
-            String driverFoundMessage;
-            if (isPhoneNumberHidden) {
-                driverFoundMessage = LocalizationHelper.getValueByCode(DRIVER_FOUND_WITHOUT_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber);
-            } else {
-                driverFoundMessage = LocalizationHelper.getValueByCode(DRIVER_FOUND_WITH_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber, driverPhoneNumber);
-            }
-
-            sendMessageExecutor(InlineKeyboardHelper.driverContactsMarkupKeyboard(driverId, passengerId, driverFoundMessage));
+        String driverUserTag = update.getCallbackQuery().getFrom().getUserName();
+        if (!Objects.equals(UserCollection.getUserTag(driverId), driverUserTag)) {
+            UserCollection.updateUserTag(driverId, driverUserTag);
         }
+
+        boolean isDriverPhoneNumberHidden = Boolean.parseBoolean(UserCollection.getIsPhoneNumberHidden(driverId));
+        StringBuilder driverInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(DRIVER_INFO_BASE_MESSAGE, passengerLocale).formatted(driverName))
+                .append(LocalizationHelper.getValueByCode(DRIVER_INFO_CAR_PLATE_MESSAGE, passengerLocale).formatted(driverCarModel, driverCarColor, driverCarNumber));
+
+        if (!isDriverPhoneNumberHidden) {
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
+        }
+
+        if (driverReviewsAmount >= 10) {
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_RATING_MESSAGE, passengerLocale).formatted(driverRating));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_REVIEWS_AMOUNT_MESSAGE, passengerLocale).formatted(driverReviewsAmount));
+        }
+
+        if (isDriverPhoneNumberHidden && driverUserTag == null) {
+            sendMessageToUser(driverId, LocalizationHelper.getValueByCode(MISSING_USER_TAG_WITHOUT_NUMBER_DRIVER_WARN_MESSAGE, driverLocale));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_MISSING_CONTACTS_MESSAGE, passengerLocale));
+        }
+
+        driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_LOCATION_MESSAGE, passengerLocale));
+
+        if (driverUserTag == null) {
+            sendMessageToUser(passengerId, driverInfoMessage.toString());
+        } else {
+            sendMessageExecutor(
+                    InlineKeyboardHelper.driverContactsMarkupKeyboard(driverId, passengerId, driverInfoMessage.toString())
+            );
+        }
+
+//        if (userTag == null) { //TODO: Refactor to StringBuilder
+//            if (!Objects.equals(UserCollection.getUserTag(driverId), userTag)) {
+//                UserCollection.updateUserTag(driverId, userTag);
+//            }
+//
+//            if (isPhoneNumberHidden) {
+//                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(MISSING_USER_TAG_WITHOUT_NUMBER_DRIVER_WARN_MESSAGE, driverLocale));
+//                sendMessageToUser(passengerId, LocalizationHelper.getValueByCode(DRIVER_FOUND_WITHOUT_TAG_AND_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber));
+//            } else {
+//                sendMessageToUser(passengerId, LocalizationHelper.getValueByCode(DRIVER_FOUND_WITH_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber, driverPhoneNumber));
+//            }
+//        } else {
+//            if (!Objects.equals(UserCollection.getUserTag(driverId), userTag)) {
+//                UserCollection.updateUserTag(driverId, userTag);
+//            }
+//
+//            String driverFoundMessage;
+//            if (isPhoneNumberHidden) {
+//                driverFoundMessage = LocalizationHelper.getValueByCode(DRIVER_FOUND_WITHOUT_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber);
+//            } else {
+//                driverFoundMessage = LocalizationHelper.getValueByCode(DRIVER_FOUND_WITH_NUMBER_MESSAGE, passengerLocale).formatted(driverName, driverCarModel, driverCarColor, driverCarNumber, driverPhoneNumber);
+//            }
+//
+//            sendMessageExecutor(InlineKeyboardHelper.driverContactsMarkupKeyboard(driverId, passengerId, driverFoundMessage));
+//        }
 
         DriverCollection.setIsWaitingForNewTrip(driverId, false);
         sendMessageExecutor(
@@ -154,7 +181,8 @@ public class DriverQueryParser {
         }
 
         boolean isDriverPhoneNumberHidden = Boolean.parseBoolean(UserCollection.getIsPhoneNumberHidden(driverId));
-        StringBuilder driverInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(DRIVER_INFO_BASE_MESSAGE, passengerLocale).formatted(driverName, driverCarModel));
+        StringBuilder driverInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(DRIVER_INFO_BASE_MESSAGE, passengerLocale).formatted(driverName))
+                .append(LocalizationHelper.getValueByCode(DRIVER_INFO_CAR_PLATE_POSTPONED_MESSAGE, passengerLocale).formatted(driverCarModel));
 
         if (!isDriverPhoneNumberHidden) {
             driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
@@ -169,6 +197,8 @@ public class DriverQueryParser {
             sendMessageToUser(driverId, LocalizationHelper.getValueByCode(MISSING_USER_TAG_WITHOUT_NUMBER_DRIVER_WARN_MESSAGE, driverLocale));
             driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_MISSING_CONTACTS_MESSAGE, passengerLocale));
         }
+
+        driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_FURTHER_CONTACTS_POSTPONED_MESSAGE, passengerLocale));
 
         if (driverUserTag == null) {
             sendMessageToUser(passengerId, driverInfoMessage.toString());

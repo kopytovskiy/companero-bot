@@ -71,15 +71,13 @@ public class TextMessages {
 
     public static final String CONFIRM_ORDER_BY_PASSENGER_MESSAGE = "confirm.order.by.passenger.message";
 
-    public static final String DRIVER_FOUND_WITHOUT_NUMBER_MESSAGE = "driver.found.without.number.message";
+    public static final String DRIVER_INFO_BASE_MESSAGE = "driver.info.base.message";
 
-    public static final String DRIVER_FOUND_BASE_MESSAGE = "driver.found.base.message";
+    public static final String DRIVER_INFO_CAR_PLATE_MESSAGE = "driver.info.car.plate.message";
 
-    public static final String DRIVER_FOUND_CAR_PLATE_MESSAGE = "driver.found.car.plate.message";
+    public static final String DRIVER_INFO_CAR_PLATE_POSTPONED_MESSAGE = "driver.info.car.plate.postponed.message";
 
-    public static final String DRIVER_FOUND_CAR_PLATE_POSTPONED_MESSAGE = "driver.found.car.plate.postponed.message";
-
-    public static final String DRIVER_FOUND_PHONE_NUMBER_MESSAGE = "driver.found.phone.number.message";
+    public static final String DRIVER_INFO_PHONE_NUMBER_MESSAGE = "driver.info.phone.number.message";
 
     public static final String DRIVER_INFO_RATING_MESSAGE = "driver.info.rating.message";
 
@@ -93,11 +91,7 @@ public class TextMessages {
 
     public static final String DRIVER_LOCATION_MESSAGE = "driver.location.message";
 
-    public static final String DRIVER_FOUND_WITH_NUMBER_MESSAGE = "driver.found.with.number.message";
-
     public static final String FURTHER_STEPS_FOR_PASSENGER_POSTPONED_MESSAGE = "further.steps.for.passenger.postponed.message";
-
-    public static final String DRIVER_FOUND_WITHOUT_TAG_AND_NUMBER_MESSAGE = "driver.found.without.tag.and.number.message";
 
     public static final String CANCEL_TRIP_BY_PASSENGER_SELF_MESSAGE = "cancel.trip.by.passenger.self.message";
 
@@ -124,10 +118,6 @@ public class TextMessages {
     public static final String ORDER_ID_PART_MESSAGE = "order.id.part.message";
 
     public static final String NEW_ORDER_BASE_MESSAGE = "new.order.base.message";
-
-    public static final String NEW_ORDER_MESSAGE = "new.order.message";
-
-    public static final String NEW_ORDER_FREE_RIDE_MESSAGE = "new.order.free.ride.message";
 
     public static final String CAR_MODEL_REQUEST_MESSAGE = "car.model.request.message";
 

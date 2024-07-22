@@ -20,8 +20,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.ArrayList;
 
 import static com.companerobot.constants.ExecutionConstants.BOT_TOKEN;
-import static com.companerobot.constants.TextMessages.NEW_ORDER_FREE_RIDE_MESSAGE;
-import static com.companerobot.constants.TextMessages.NEW_ORDER_MESSAGE;
+import static com.companerobot.constants.TextMessages.*;
 import static com.companerobot.constants.TextValues.NOW_VALUE;
 import static com.companerobot.enums.OrderType.IMMEDIATE;
 import static java.lang.Math.toIntExact;
@@ -71,22 +70,21 @@ public class MessageExecutionHelper {
         double radiusInKms;
         if (orderType == IMMEDIATE) {
             radiusInKms = 25;
-
         } else {
             radiusInKms = 125;
-        }
-
-        String newOrderMessage;
-        if (price == 0.00) {
-            newOrderMessage = NEW_ORDER_FREE_RIDE_MESSAGE; //TODO: Refactor to StringBuilder
-        } else {
-            newOrderMessage = NEW_ORDER_MESSAGE;
         }
 
         Point pickUpPoint = new Point(new Position(pickUpPointLongitude, pickUpAddressLatitude));
         ArrayList<Long> driverUserIds = DriverCollection.getNearByDriversIdOnDutyList(pickUpPoint, radiusInKms);
         for (Long driverId : driverUserIds) {
             CountryCode driverLocale = UserCollection.getUserLocale(driverId);
+
+            StringBuilder newOrderMessage = new StringBuilder(LocalizationHelper.getValueByCode(NEW_ORDER_BASE_MESSAGE, driverLocale));
+            if (price == 0.00) {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, driverLocale));
+            } else {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, driverLocale));
+            }
 
             String departureTime;
             if (orderType == IMMEDIATE) {
@@ -99,7 +97,7 @@ public class MessageExecutionHelper {
                     .chatId(driverId.toString())
                     .replyMarkup(InlineKeyboardHelper.acceptOrderMarkupKeyboard(driverId, pickUpAddressLatitude, pickUpPointLongitude))
                     .parseMode("html")
-                    .text(LocalizationHelper.getValueByCode(newOrderMessage, driverLocale).formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes, departureTime, price, currency))
+                    .text(LocalizationHelper.getValueByCode(newOrderMessage.toString(), driverLocale).formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes, departureTime, price, currency))
                     .build();
             sendMessageExecutor(sendMessage);
         }

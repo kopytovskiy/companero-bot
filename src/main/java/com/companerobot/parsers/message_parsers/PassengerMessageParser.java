@@ -240,9 +240,9 @@ public class PassengerMessageParser {
                             ));
 
             if (price == 0.00) {
-                orderInfo.append(LocalizationHelper.getValueByCode(PASSENGER_ORDER_FREE_RIDE_MESSAGE, passengerLocale));
+                orderInfo.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, passengerLocale));
             } else {
-                orderInfo.append(LocalizationHelper.getValueByCode(PASSENGER_ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
+                orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
             }
 
             sendMessageExecutor(
@@ -562,7 +562,7 @@ public class PassengerMessageParser {
                                         LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)
                                 ));
 
-                orderInfo.append(LocalizationHelper.getValueByCode(PASSENGER_ORDER_PRICE_MESSAGE, passengerLocale).formatted(priceDouble, order.get("currency")));
+                orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(priceDouble, order.get("currency")));
                 orderInfo.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, passengerLocale));
 
                 sendMessageExecutor(
@@ -613,9 +613,9 @@ public class PassengerMessageParser {
                         ));
 
         if (price == 0.00) {
-            orderInfo.append(LocalizationHelper.getValueByCode(PASSENGER_ORDER_FREE_RIDE_MESSAGE, passengerLocale));
+            orderInfo.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, passengerLocale));
         } else {
-            orderInfo.append(LocalizationHelper.getValueByCode(PASSENGER_ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
+            orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
         }
 
         sendMessageExecutor(
