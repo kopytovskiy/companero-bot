@@ -119,6 +119,8 @@ public class TextMessages {
 
     public static final String NEW_ORDER_BASE_MESSAGE = "new.order.base.message";
 
+    public static final String DEPARTURE_TIME_ORDER_MESSAGE = "departure.time.order.message";
+
     public static final String CAR_MODEL_REQUEST_MESSAGE = "car.model.request.message";
 
     public static final String LOCATION_SENT_TO_PASSENGER_MESSAGE = "location.sent.to.passenger.message";

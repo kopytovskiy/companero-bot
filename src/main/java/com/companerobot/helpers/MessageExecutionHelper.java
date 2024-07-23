@@ -79,25 +79,29 @@ public class MessageExecutionHelper {
         for (Long driverId : driverUserIds) {
             CountryCode driverLocale = UserCollection.getUserLocale(driverId);
 
-            StringBuilder newOrderMessage = new StringBuilder(LocalizationHelper.getValueByCode(NEW_ORDER_BASE_MESSAGE, driverLocale));
+            StringBuilder newOrderMessage = new StringBuilder(LocalizationHelper.getValueByCode(NEW_ORDER_BASE_MESSAGE, driverLocale)
+                    .formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes));
+
+            if (orderType == IMMEDIATE) {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, driverLocale)
+                        .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, driverLocale)));
+            } else {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, driverLocale)
+                        .formatted(order.get("departureTime").toString()));
+            }
+
             if (price == 0.00) {
                 newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, driverLocale));
             } else {
-                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, driverLocale));
+                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, driverLocale).formatted(price, currency));
             }
 
-            String departureTime;
-            if (orderType == IMMEDIATE) {
-                departureTime = LocalizationHelper.getValueByCode(NOW_VALUE, driverLocale);
-            } else {
-                departureTime = order.get("departureTime").toString();
-            }
 
             SendMessage sendMessage = SendMessage.builder()
                     .chatId(driverId.toString())
                     .replyMarkup(InlineKeyboardHelper.acceptOrderMarkupKeyboard(driverId, pickUpAddressLatitude, pickUpPointLongitude))
                     .parseMode("html")
-                    .text(LocalizationHelper.getValueByCode(newOrderMessage.toString(), driverLocale).formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes, departureTime, price, currency))
+                    .text(newOrderMessage.toString())
                     .build();
             sendMessageExecutor(sendMessage);
         }
