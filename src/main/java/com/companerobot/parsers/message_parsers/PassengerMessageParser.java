@@ -2,6 +2,7 @@ package com.companerobot.parsers.message_parsers;
 
 import com.companerobot.enums.CountryCode;
 import com.companerobot.enums.OrderStatus;
+import com.companerobot.enums.OrderType;
 import com.companerobot.enums.UserStatus;
 import com.companerobot.helpers.CipherHelper;
 import com.companerobot.helpers.LocalizationHelper;
@@ -25,6 +26,7 @@ import static com.companerobot.constants.TextMessages.*;
 import static com.companerobot.constants.TextValues.*;
 import static com.companerobot.constants.TextValues.NO_VALUE;
 import static com.companerobot.enums.OrderStatus.*;
+import static com.companerobot.enums.OrderType.IMMEDIATE;
 import static com.companerobot.enums.OrderType.POSTPONED;
 import static com.companerobot.enums.UserStatus.*;
 import static com.companerobot.enums.UserStatus.EDIT_SHARE_PHONE_NUMBER;
@@ -192,10 +194,13 @@ public class PassengerMessageParser {
                             .formatted(
                                     CipherHelper.decrypt(order.get("pickUpAddress").toString()),
                                     CipherHelper.decrypt(order.get("destinationAddress").toString()),
-                                    CipherHelper.decrypt(order.get("notes").toString()),
-                                    LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)
+                                    CipherHelper.decrypt(order.get("notes").toString())
                             ));
 
+            orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
+                    .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)));
+
+            orderInfo.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, passengerLocale));
             orderInfo.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, passengerLocale));
 
             sendMessageExecutor(
@@ -230,20 +235,31 @@ public class PassengerMessageParser {
         if (order != null) {
             OrderCollection.updateOrderStatus(order.get("orderId").toString(), PASSENGER_CONFIRMATION_WAITING);
             double price = Double.parseDouble(order.get("price").toString());
+            OrderType orderType = OrderType.valueOf(order.get("orderType").toString());
+
             StringBuilder orderInfo = new StringBuilder(
                     LocalizationHelper.getValueByCode(CONFIRMATION_PASSENGER_ORDER_BASE_MESSAGE, passengerLocale)
                             .formatted(
                                     CipherHelper.decrypt(order.get("pickUpAddress").toString()),
                                     CipherHelper.decrypt(order.get("destinationAddress").toString()),
-                                    CipherHelper.decrypt(order.get("notes").toString()),
-                                    order.get("departureTime").toString()
+                                    CipherHelper.decrypt(order.get("notes").toString())
                             ));
+
+            if (orderType == IMMEDIATE) {
+                orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
+                        .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)));
+            } else {
+                orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
+                        .formatted(order.get("departureTime").toString()));
+            }
 
             if (price == 0.00) {
                 orderInfo.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, passengerLocale));
             } else {
                 orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
             }
+
+            orderInfo.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, passengerLocale));
 
             sendMessageExecutor(
                     InlineKeyboardHelper.changeDepartureTimeKeyboard(passengerId, orderInfo.toString())
@@ -558,10 +574,11 @@ public class PassengerMessageParser {
                                 .formatted(
                                         CipherHelper.decrypt(order.get("pickUpAddress").toString()),
                                         CipherHelper.decrypt(order.get("destinationAddress").toString()),
-                                        CipherHelper.decrypt(order.get("notes").toString()),
-                                        LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)
+                                        CipherHelper.decrypt(order.get("notes").toString())
                                 ));
 
+                orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
+                        .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)));
                 orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(priceDouble, order.get("currency")));
                 orderInfo.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, passengerLocale));
 
@@ -608,15 +625,19 @@ public class PassengerMessageParser {
                         .formatted(
                                 CipherHelper.decrypt(order.get("pickUpAddress").toString()),
                                 CipherHelper.decrypt(order.get("destinationAddress").toString()),
-                                CipherHelper.decrypt(order.get("notes").toString()),
-                                departureTime
+                                CipherHelper.decrypt(order.get("notes").toString())
                         ));
+
+        orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
+                .formatted(departureTime));
 
         if (price == 0.00) {
             orderInfo.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, passengerLocale));
         } else {
             orderInfo.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, passengerLocale).formatted(price, order.get("currency")));
         }
+
+        orderInfo.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, passengerLocale));
 
         sendMessageExecutor(
                 InlineKeyboardHelper.changeDepartureTimeKeyboard(passengerId, orderInfo.toString())
