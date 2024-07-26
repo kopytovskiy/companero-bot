@@ -108,7 +108,6 @@ public class DriverLocationParser {
         String passengerUserTag = UserCollection.getUserTag(passengerId);
         boolean isPhoneNumberHidden = Boolean.parseBoolean(UserCollection.getIsPhoneNumberHidden(passengerId));
         int passengerReviewsAmount = ReviewCollection.getUserReviewsAmount(passengerId);
-        double passengerRating = ReviewCollection.getUserRating(passengerId);
 
         StringBuilder passengerInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(LOCATION_SENT_TO_PASSENGER_MESSAGE, driverLocale))
                 .append(LocalizationHelper.getValueByCode(PASSENGER_INFO_BASE_MESSAGE, driverLocale).formatted(passengerName));
@@ -118,7 +117,8 @@ public class DriverLocationParser {
         }
 
         if (passengerReviewsAmount >= 10) {
-            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_RATING_MESSAGE, driverLocale).formatted(passengerRating));
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_RATING_MESSAGE, driverLocale)
+                    .formatted(ReviewCollection.getUserRating(passengerId)));
             passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_REVIEWS_AMOUNT_MESSAGE, driverLocale).formatted(passengerReviewsAmount));
         }
 

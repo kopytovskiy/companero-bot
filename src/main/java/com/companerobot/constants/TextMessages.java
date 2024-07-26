@@ -19,7 +19,8 @@ public class TextMessages {
                     CyrillicStringHelper.getCyrillicString("Привітулі! Перед тим як почати, вкажи, будь ласка, якою мовою тобі зручніше спілкуватись?")
     );
 
-    //USER
+
+    //MISC MESSAGES
     public static final String USER_POLICY_AGREEMENT_MESSAGE = "user.policy.agreement.message";
 
     public static final String REQUEST_CONTACTS_MESSAGE = "request.contacts.message";
@@ -45,6 +46,9 @@ public class TextMessages {
     public static final String ORDER_PRICE_MESSAGE = "order.price.message";
 
     public static final String ORDER_FREE_RIDE_MESSAGE = "order.free.ride.message";
+
+    public static final String FURTHER_CONTACTS_POSTPONED_MESSAGE = "further.contacts.postponed.message";
+
 
     //PASSENGER MESSAGES
     public static final String PASSENGER_ROLE_WELCOME_MESSAGE = "passenger.role.welcome.message";
@@ -86,8 +90,6 @@ public class TextMessages {
     public static final String DRIVER_INFO_MISSING_CONTACTS_MESSAGE = "driver.info.missing.contacts.message";
 
     public static final String DRIVER_INFO_LOCATION_MESSAGE = "driver.info.location.message";
-
-    public static final String DRIVER_INFO_FURTHER_CONTACTS_POSTPONED_MESSAGE = "driver.info.further.contacts.postponed.message";
 
     public static final String DRIVER_LOCATION_MESSAGE = "driver.location.message";
 

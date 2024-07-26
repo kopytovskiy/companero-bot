@@ -87,7 +87,7 @@ public class MessageExecutionHelper {
                         .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, driverLocale)));
             } else {
                 newOrderMessage.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, driverLocale)
-                        .formatted(order.get("departureTime").toString()));
+                        .formatted(order.get("postponedDepartureTime").toString()));
             }
 
             if (price == 0.00) {

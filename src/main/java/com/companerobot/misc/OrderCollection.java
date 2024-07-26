@@ -35,7 +35,7 @@ public class OrderCollection extends MongoBaseClass {
         document.put("notes", null);
         document.put("orderType", IMMEDIATE);
         document.put("orderStatus", WAITING_PICKUP_ADDRESS);
-        document.put("departureTime", null);
+        document.put("postponedDepartureTime", null);
         document.put("price", null);
         document.put("currency", null);
         document.put("driverId", null);
@@ -124,9 +124,9 @@ public class OrderCollection extends MongoBaseClass {
                 .toString());
     }
 
-    public static void setDepartureTime(String orderId, String postponedDepartureDetails) {
+    public static void setPostponedDepartureTime(String orderId, String postponedDepartureTime) {
         orderCollection.updateOne(Filters.eq("orderId", orderId),
-                Updates.set("departureTime", postponedDepartureDetails));
+                Updates.set("postponedDepartureTime", postponedDepartureTime));
     }
 
     public static void setPickUpAddressLongitude(String orderId, double longitude) {

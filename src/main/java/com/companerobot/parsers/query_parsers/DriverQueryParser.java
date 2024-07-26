@@ -88,8 +88,8 @@ public class DriverQueryParser {
         String driverCarColor = driverInfo.get("carColor").toString();
         String driverCarNumber = CipherHelper.decrypt(driverInfo.get("carNumber").toString());
 
-        int driverReviewsAmount = ReviewCollection.getUserReviewsAmount(passengerId);
-        double driverRating = ReviewCollection.getUserRating(passengerId);
+        int driverReviewsAmount = ReviewCollection.getUserReviewsAmount(driverId);
+        double driverRating = ReviewCollection.getUserRating(driverId);
 
         String driverUserTag = update.getCallbackQuery().getFrom().getUserName();
         if (!Objects.equals(UserCollection.getUserTag(driverId), driverUserTag)) {
@@ -172,8 +172,8 @@ public class DriverQueryParser {
         Document driverInfo = DriverCollection.getDriverInfoByDriverId(driverId);
         String driverCarModel = driverInfo.get("carModel").toString();
 
-        int driverReviewsAmount = ReviewCollection.getUserReviewsAmount(passengerId);
-        double driverRating = ReviewCollection.getUserRating(passengerId);
+        int driverReviewsAmount = ReviewCollection.getUserReviewsAmount(driverId);
+        double driverRating = ReviewCollection.getUserRating(driverId);
 
         String driverUserTag = update.getCallbackQuery().getFrom().getUserName();
         if (!Objects.equals(UserCollection.getUserTag(driverId), driverUserTag)) {
@@ -196,9 +196,9 @@ public class DriverQueryParser {
         if (isDriverPhoneNumberHidden && driverUserTag == null) {
             sendMessageToUser(driverId, LocalizationHelper.getValueByCode(MISSING_USER_TAG_WITHOUT_NUMBER_DRIVER_WARN_MESSAGE, driverLocale));
             driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_MISSING_CONTACTS_MESSAGE, passengerLocale));
+        } else {
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(FURTHER_CONTACTS_POSTPONED_MESSAGE, passengerLocale));
         }
-
-        driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_FURTHER_CONTACTS_POSTPONED_MESSAGE, passengerLocale));
 
         if (driverUserTag == null) {
             sendMessageToUser(passengerId, driverInfoMessage.toString());
@@ -264,6 +264,8 @@ public class DriverQueryParser {
 
         if (isPassengerPhoneNumberHidden && passengerUserTag == null) {
             passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_MISSING_CONTACTS_MESSAGE, driverLocale));
+        } else {
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(FURTHER_CONTACTS_POSTPONED_MESSAGE, passengerLocale));
         }
 
         passengerInfoMessage.append(LocalizationHelper.getValueByCode(FINANCIAL_OPERATIONS_WARN_MESSAGE, driverLocale));

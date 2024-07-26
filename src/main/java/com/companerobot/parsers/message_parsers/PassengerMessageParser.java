@@ -250,7 +250,7 @@ public class PassengerMessageParser {
                         .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale)));
             } else {
                 orderInfo.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, passengerLocale)
-                        .formatted(order.get("departureTime").toString()));
+                        .formatted(order.get("postponedDepartureTime").toString()));
             }
 
             if (price == 0.00) {
@@ -517,7 +517,7 @@ public class PassengerMessageParser {
             addPrice(waitingPriceOrder, message, passengerId, passengerLocale);
 
         } else if (waitingDepartureDetails != null) {
-            addDepartureDetails(waitingDepartureDetails, message, passengerId, passengerLocale);
+            addDepartureTimeDetails(waitingDepartureDetails, message, passengerId, passengerLocale);
         }
 
     }
@@ -568,7 +568,6 @@ public class PassengerMessageParser {
             } else {
                 OrderCollection.setPriceForOrder(order.get("orderId").toString(), priceDouble);
                 OrderCollection.updateOrderStatus(order.get("orderId").toString(), PASSENGER_CONFIRMATION_WAITING);
-                OrderCollection.setDepartureTime(order.get("orderId").toString(), LocalizationHelper.getValueByCode(NOW_VALUE, passengerLocale));
                 StringBuilder orderInfo = new StringBuilder(
                         LocalizationHelper.getValueByCode(CONFIRMATION_PASSENGER_ORDER_BASE_MESSAGE, passengerLocale)
                                 .formatted(
@@ -612,12 +611,12 @@ public class PassengerMessageParser {
     }
 
 
-    private static void addDepartureDetails(Document order, Message message, Long passengerId, CountryCode passengerLocale) {
+    private static void addDepartureTimeDetails(Document order, Message message, Long passengerId, CountryCode passengerLocale) {
         String orderId = order.get("orderId").toString();
         OrderCollection.updateOrderStatus(orderId, PASSENGER_CONFIRMATION_WAITING);
         OrderCollection.updateOrderType(orderId, POSTPONED);
         String departureTime = message.getText();
-        OrderCollection.setDepartureTime(orderId, departureTime);
+        OrderCollection.setPostponedDepartureTime(orderId, departureTime);
         double price = Double.parseDouble(order.get("price").toString());
 
         StringBuilder orderInfo = new StringBuilder(

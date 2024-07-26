@@ -20,16 +20,12 @@ public class ReviewCollection {
     public static void addNewUserToReviewDB(Long userId) {
         Document document = new Document();
         document.put("userId", userId);
-        document.put("rating", 0);
+        document.put("rating", 0.0);
         document.put("reviews", new ArrayList<>());
         reviewCollection.insertOne(document);
     }
 
     public static void addUserReview(Long userId, Long reviewerId, boolean isLiked) {
-
-        if (!isUserHasReviews(userId)) {
-            addNewUserToReviewDB(userId);
-        }
 
         if (!isReviewerAlreadyAddedReview(userId, reviewerId)) {
             addNewReview(userId, reviewerId, isLiked);
