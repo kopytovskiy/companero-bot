@@ -113,11 +113,11 @@ public class DriverLocationParser {
                 .append(LocalizationHelper.getValueByCode(PASSENGER_INFO_BASE_MESSAGE, driverLocale).formatted(passengerName));
 
         if (!isPhoneNumberHidden) {
-            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_PHONE_NUMBER_MESSAGE, driverLocale).formatted(passengerPhoneNumber));
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PHONE_NUMBER_MESSAGE, driverLocale).formatted(passengerPhoneNumber));
         }
 
         if (passengerReviewsAmount >= 10) {
-            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_RATING_MESSAGE, driverLocale)
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(RATING_MESSAGE, driverLocale)
                     .formatted(ReviewCollection.getUserRating(passengerId)));
             passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_REVIEWS_AMOUNT_MESSAGE, driverLocale).formatted(passengerReviewsAmount));
         }

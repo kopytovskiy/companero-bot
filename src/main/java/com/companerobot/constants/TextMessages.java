@@ -47,6 +47,10 @@ public class TextMessages {
 
     public static final String ORDER_FREE_RIDE_MESSAGE = "order.free.ride.message";
 
+    public static final String PHONE_NUMBER_MESSAGE = "phone.number.message";
+
+    public static final String RATING_MESSAGE = "rating.message";
+
     public static final String FURTHER_CONTACTS_POSTPONED_MESSAGE = "further.contacts.postponed.message";
 
 
@@ -80,10 +84,6 @@ public class TextMessages {
     public static final String DRIVER_INFO_CAR_PLATE_MESSAGE = "driver.info.car.plate.message";
 
     public static final String DRIVER_INFO_CAR_PLATE_POSTPONED_MESSAGE = "driver.info.car.plate.postponed.message";
-
-    public static final String DRIVER_INFO_PHONE_NUMBER_MESSAGE = "driver.info.phone.number.message";
-
-    public static final String DRIVER_INFO_RATING_MESSAGE = "driver.info.rating.message";
 
     public static final String DRIVER_INFO_REVIEWS_AMOUNT_MESSAGE = "driver.info.reviews.amount.message";
 
@@ -128,10 +128,6 @@ public class TextMessages {
     public static final String LOCATION_SENT_TO_PASSENGER_MESSAGE = "location.sent.to.passenger.message";
 
     public static final String PASSENGER_INFO_BASE_MESSAGE = "passenger.info.base.message";
-
-    public static final String PASSENGER_INFO_PHONE_NUMBER_MESSAGE = "passenger.info.phone.number.message";
-
-    public static final String PASSENGER_INFO_RATING_MESSAGE = "passenger.info.rating.message";
 
     public static final String PASSENGER_INFO_REVIEWS_AMOUNT_MESSAGE = "passenger.info.reviews.amount.message";
 

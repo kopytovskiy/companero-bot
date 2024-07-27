@@ -101,11 +101,11 @@ public class DriverQueryParser {
                 .append(LocalizationHelper.getValueByCode(DRIVER_INFO_CAR_PLATE_MESSAGE, passengerLocale).formatted(driverCarModel, driverCarColor, driverCarNumber));
 
         if (!isDriverPhoneNumberHidden) {
-            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
         }
 
         if (driverReviewsAmount >= 10) {
-            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_RATING_MESSAGE, passengerLocale).formatted(driverRating));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(RATING_MESSAGE, passengerLocale).formatted(driverRating));
             driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_REVIEWS_AMOUNT_MESSAGE, passengerLocale).formatted(driverReviewsAmount));
         }
 
@@ -185,11 +185,11 @@ public class DriverQueryParser {
                 .append(LocalizationHelper.getValueByCode(DRIVER_INFO_CAR_PLATE_POSTPONED_MESSAGE, passengerLocale).formatted(driverCarModel));
 
         if (!isDriverPhoneNumberHidden) {
-            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(PHONE_NUMBER_MESSAGE, passengerLocale).formatted(driverPhoneNumber));
         }
 
         if (driverReviewsAmount >= 10) {
-            driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_RATING_MESSAGE, passengerLocale).formatted(driverRating));
+            driverInfoMessage.append(LocalizationHelper.getValueByCode(RATING_MESSAGE, passengerLocale).formatted(driverRating));
             driverInfoMessage.append(LocalizationHelper.getValueByCode(DRIVER_INFO_REVIEWS_AMOUNT_MESSAGE, passengerLocale).formatted(driverReviewsAmount));
         }
 
@@ -254,11 +254,11 @@ public class DriverQueryParser {
         StringBuilder passengerInfoMessage = new StringBuilder(LocalizationHelper.getValueByCode(PASSENGER_INFO_BASE_MESSAGE, driverLocale).formatted(passengerName));
 
         if (!isPassengerPhoneNumberHidden) {
-            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_PHONE_NUMBER_MESSAGE, driverLocale).formatted(passengerPhoneNumber));
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PHONE_NUMBER_MESSAGE, driverLocale).formatted(passengerPhoneNumber));
         }
 
         if (passengerReviewsAmount >= 10) {
-            passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_RATING_MESSAGE, driverLocale).formatted(passengerRating));
+            passengerInfoMessage.append(LocalizationHelper.getValueByCode(RATING_MESSAGE, driverLocale).formatted(passengerRating));
             passengerInfoMessage.append(LocalizationHelper.getValueByCode(PASSENGER_INFO_REVIEWS_AMOUNT_MESSAGE, driverLocale).formatted(passengerReviewsAmount));
         }
 
