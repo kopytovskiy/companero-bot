@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.companerobot.misc.MongoBaseClass.database;
 import static com.mongodb.client.model.Aggregates.*;
@@ -38,9 +39,13 @@ public class ReviewCollection {
     }
 
     private static void addNewReview(Long userId, Long reviewerId, boolean isLiked) {
+        Date currentTime = new Date();
+
         Document reviewDocument = new Document();
         reviewDocument.put("reviewerId", reviewerId);
         reviewDocument.put("isLiked", isLiked);
+        reviewDocument.put("createdAt", currentTime);
+        reviewDocument.put("updatedAt", currentTime);
 
         reviewCollection.updateOne(
                 Filters.eq("userId", userId),
@@ -51,7 +56,9 @@ public class ReviewCollection {
     private static void updateOldReview(Long userId, Long reviewerId, boolean isLiked) {
         reviewCollection.updateOne(
                 Filters.eq("userId", userId),
-                Updates.set("reviews.$[elem].isLiked", isLiked),
+                Updates.combine(
+                        Updates.set("reviews.$[elem].isLiked", isLiked),
+                        Updates.set("reviews.$[elem].updatedAt", new Date())),
                 new UpdateOptions()
                         .arrayFilters(Arrays.asList(
                                 Filters.eq("elem.reviewerId", reviewerId))
