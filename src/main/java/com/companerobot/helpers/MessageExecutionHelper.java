@@ -11,16 +11,19 @@ import org.bson.Document;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.message.MaybeInaccessibleMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.ArrayList;
 
 import static com.companerobot.constants.ExecutionConstants.BOT_TOKEN;
-import static com.companerobot.constants.TextMessages.NEW_ORDER_FREE_RIDE_MESSAGE;
-import static com.companerobot.constants.TextMessages.NEW_ORDER_MESSAGE;
+import static com.companerobot.constants.TextMessages.*;
 import static com.companerobot.constants.TextValues.NOW_VALUE;
 import static com.companerobot.enums.OrderType.IMMEDIATE;
+import static java.lang.Math.toIntExact;
 
 public class MessageExecutionHelper {
 
@@ -67,16 +70,8 @@ public class MessageExecutionHelper {
         double radiusInKms;
         if (orderType == IMMEDIATE) {
             radiusInKms = 25;
-
         } else {
             radiusInKms = 125;
-        }
-
-        String newOrderMessage;
-        if (price == 0.00) {
-            newOrderMessage = NEW_ORDER_FREE_RIDE_MESSAGE; //TODO: Refactor to StringBuilder
-        } else {
-            newOrderMessage = NEW_ORDER_MESSAGE;
         }
 
         Point pickUpPoint = new Point(new Position(pickUpPointLongitude, pickUpAddressLatitude));
@@ -84,18 +79,29 @@ public class MessageExecutionHelper {
         for (Long driverId : driverUserIds) {
             CountryCode driverLocale = UserCollection.getUserLocale(driverId);
 
-            String departureTime;
+            StringBuilder newOrderMessage = new StringBuilder(LocalizationHelper.getValueByCode(NEW_ORDER_BASE_MESSAGE, driverLocale)
+                    .formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes));
+
             if (orderType == IMMEDIATE) {
-                departureTime = LocalizationHelper.getValueByCode(NOW_VALUE, driverLocale);
+                newOrderMessage.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, driverLocale)
+                        .formatted(LocalizationHelper.getValueByCode(NOW_VALUE, driverLocale)));
             } else {
-                departureTime = order.get("departureTime").toString();
+                newOrderMessage.append(LocalizationHelper.getValueByCode(DEPARTURE_TIME_ORDER_MESSAGE, driverLocale)
+                        .formatted(order.get("postponedDepartureTime").toString()));
             }
+
+            if (price == 0.00) {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_FREE_RIDE_MESSAGE, driverLocale));
+            } else {
+                newOrderMessage.append(LocalizationHelper.getValueByCode(ORDER_PRICE_MESSAGE, driverLocale).formatted(price, currency));
+            }
+
 
             SendMessage sendMessage = SendMessage.builder()
                     .chatId(driverId.toString())
                     .replyMarkup(InlineKeyboardHelper.acceptOrderMarkupKeyboard(driverId, pickUpAddressLatitude, pickUpPointLongitude))
                     .parseMode("html")
-                    .text(LocalizationHelper.getValueByCode(newOrderMessage, driverLocale).formatted(orderId, pickUpAddress, approximateDestinationAddress, tripLength, notes, departureTime, price, currency))
+                    .text(newOrderMessage.toString())
                     .build();
             sendMessageExecutor(sendMessage);
         }
@@ -108,6 +114,23 @@ public class MessageExecutionHelper {
     public static void sendMessageExecutor(SendMessage sendMessage) {
         try {
             telegramClient.executeAsync(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void editMessage(MaybeInaccessibleMessage message, String text) {
+        long messageId = message.getMessageId();
+        long chatId = message.getChatId();
+
+        EditMessageText updatedMessage = EditMessageText.builder()
+                .chatId(chatId)
+                .messageId(toIntExact(messageId))
+                .text(text)
+                .build();
+
+        try {
+            telegramClient.executeAsync(updatedMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

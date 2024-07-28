@@ -5,6 +5,7 @@ import com.companerobot.enums.UserStatus;
 import com.companerobot.helpers.LocalizationHelper;
 import com.companerobot.keyboards.ReplyKeyboardHelper;
 import com.companerobot.misc.DriverCollection;
+import com.companerobot.misc.ReviewCollection;
 import com.companerobot.misc.UserCollection;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
@@ -178,6 +179,7 @@ public class MiscMessageParser {
         if (userStatus == WAITING_ROLE) {
             UserCollection.updateUserRole(userId, PASSENGER);
             UserCollection.updateUserStatus(userId, ACTIVE);
+            ReviewCollection.addNewUserToReviewDB(userId);
 
             sendMessageExecutor(ReplyKeyboardHelper.mainMenuPassengerKeyboard(userId,
                     LocalizationHelper.getValueByCode(PASSENGER_ROLE_WELCOME_MESSAGE, driverLocale)
@@ -191,6 +193,7 @@ public class MiscMessageParser {
             UserCollection.updateUserRole(userId, DRIVER);
             UserCollection.updateUserStatus(userId, ACTIVE);
             DriverCollection.addDriverToDB(userId);
+            ReviewCollection.addNewUserToReviewDB(userId);
 
             sendMessageExecutor(
                     ReplyKeyboardHelper.removeKeyboardForUser(userId, LocalizationHelper.getValueByCode(CAR_MODEL_REQUEST_MESSAGE, driverLocale))
