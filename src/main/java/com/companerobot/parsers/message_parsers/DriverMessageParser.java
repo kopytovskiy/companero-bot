@@ -170,6 +170,15 @@ public class DriverMessageParser {
 
             Long passengerId = Long.valueOf(order.get("userId").toString());
             CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
+
+            sendMessageExecutor(
+                    InlineKeyboardHelper.requestRideReviewMarkupKeyboard(driverId, LocalizationHelper.getValueByCode(ADD_REVIEW_ON_PASSENGER_FOR_DRIVERS_MESSAGE, driverLocale).formatted(orderId))
+            );
+
+            sendMessageExecutor(
+                    InlineKeyboardHelper.requestRideReviewMarkupKeyboard(passengerId, LocalizationHelper.getValueByCode(ADD_REVIEW_ON_DRIVER_FOR_PASSENGERS_MESSAGE, passengerLocale).formatted(orderId))
+            );
+
             sendMessageExecutor(
                     ReplyKeyboardHelper.mainMenuPassengerKeyboard(passengerId, LocalizationHelper.getValueByCode(FINISHED_ORDER_PASSENGER_MESSAGE, passengerLocale)
                             .formatted(LocalizationHelper.getValueByCode(CREATE_NEW_ORDER_HOOK_MESSAGE, passengerLocale)))
