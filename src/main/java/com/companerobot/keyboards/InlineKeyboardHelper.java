@@ -8,8 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
-import static com.companerobot.constants.Callbacks.ACCEPT_ORDER_CALLBACK;
-import static com.companerobot.constants.Callbacks.ADD_POSTPONED_DEPARTURE_DETAILS_CALLBACK;
+import static com.companerobot.constants.Callbacks.*;
 import static com.companerobot.constants.InlineButtonNames.*;
 import static com.companerobot.constants.URLs.GOOGLE_MAPS_BASE_URL;
 
@@ -69,6 +68,7 @@ public class InlineKeyboardHelper {
                 .build();
     }
 
+
     public static SendMessage changeDepartureTimeKeyboard(Long passengerId, String message) {
         CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
 
@@ -90,8 +90,6 @@ public class InlineKeyboardHelper {
     }
 
 
-
-
     public static SendMessage driverContactsMarkupKeyboard(Long driverId, Long passengerId, String message) {
         CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
 
@@ -107,6 +105,30 @@ public class InlineKeyboardHelper {
         return SendMessage.builder()
                 .parseMode("html")
                 .chatId(passengerId.toString())
+                .replyMarkup(inlineKeyboardMarkup)
+                .text(message)
+                .build();
+    }
+
+
+    public static SendMessage requestRideReviewMarkupKeyboard(Long userId, String message) {
+        InlineKeyboardButton likeButton = InlineKeyboardButton.builder()
+                .text(LIKE_RIDE_INLINE_TEXT)
+                .callbackData(LIKE_RIDE_CALLBACK)
+                .build();
+
+        InlineKeyboardButton dislikeButton = InlineKeyboardButton.builder()
+                .text(DISLIKE_RIDE_INLINE_TEXT)
+                .callbackData(DISLIKE_RIDE_CALLBACK)
+                .build();
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(likeButton, dislikeButton))
+                .build();
+
+        return SendMessage.builder()
+                .parseMode("html")
+                .chatId(userId)
                 .replyMarkup(inlineKeyboardMarkup)
                 .text(message)
                 .build();

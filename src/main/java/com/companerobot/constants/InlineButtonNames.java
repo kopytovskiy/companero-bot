@@ -14,4 +14,8 @@ public class InlineButtonNames {
 
     public static final String ADD_POSTPONED_DEPARTURE_DETAILS_INLINE_TEXT = "add.postponed.departure.details.inline.text";
 
+    public static final String LIKE_RIDE_INLINE_TEXT = "\uD83D\uDC4D";
+
+    public static final String DISLIKE_RIDE_INLINE_TEXT = "\uD83D\uDC4E";
+
 }
