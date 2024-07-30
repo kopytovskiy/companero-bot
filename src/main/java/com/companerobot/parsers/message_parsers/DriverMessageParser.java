@@ -1,9 +1,6 @@
 package com.companerobot.parsers.message_parsers;
 
-import com.companerobot.enums.DriverInfoFillingStatus;
-import com.companerobot.enums.CountryCode;
-import com.companerobot.enums.OrderStatus;
-import com.companerobot.enums.UserStatus;
+import com.companerobot.enums.*;
 import com.companerobot.helpers.CipherHelper;
 import com.companerobot.helpers.LocalizationHelper;
 import com.companerobot.keyboards.InlineKeyboardHelper;
@@ -135,14 +132,27 @@ public class DriverMessageParser {
             CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
             sendMessageToUser(passengerId, LocalizationHelper.getValueByCode(DRIVER_ARRIVED_PASSENGER_MESSAGE, passengerLocale));
 
+            double price = Double.parseDouble(order.get("price").toString());
+            if (price > 0.00) {
+                String currency = order.get("currency").toString();
+                InlineKeyboardMarkup openWalletKeyboard = InlineKeyboardHelper.openWallet(passengerId);
+                SendMessage openWalletSendMessage = SendMessage.builder()
+                        .chatId(passengerId.toString())
+                        .replyMarkup(openWalletKeyboard)
+                        .parseMode("html")
+                        .text(LocalizationHelper.getValueByCode(PAYMENT_REMINDER_MESSAGE, passengerLocale).formatted(price, currency))
+                        .build();
+                sendMessageExecutor(openWalletSendMessage);
+            }
+
             InlineKeyboardMarkup openDestinationPointKeyboard = InlineKeyboardHelper.destinationPointMarkupKeyboard(driverId, destinationAddressLatitude, destinationAddressLongitude);
-            SendMessage sendMessage = SendMessage.builder()
+            SendMessage destinationPointSendMessage = SendMessage.builder()
                     .chatId(driverId.toString())
                     .replyMarkup(openDestinationPointKeyboard)
                     .parseMode("html")
                     .text(LocalizationHelper.getValueByCode(DESTINATION_POINT_DRIVER_MESSAGE, driverLocale).formatted(destinationAddress))
                     .build();
-            sendMessageExecutor(sendMessage);
+            sendMessageExecutor(destinationPointSendMessage);
 
             sendMessageExecutor(ReplyKeyboardHelper.driverOnPickUpPointKeyboard(driverId, LocalizationHelper.getValueByCode(FUTURE_FINISH_ORDER_REMINDER_MESSAGE, driverLocale)
                     .formatted(LocalizationHelper.getValueByCode(FINISH_ORDER_HOOK_MESSAGE, driverLocale))));

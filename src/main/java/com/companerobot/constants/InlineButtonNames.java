@@ -12,6 +12,8 @@ public class InlineButtonNames {
 
     public static final String OPEN_DESTINATION_POINT_INLINE_TEXT = "open.destination.point.inline.text";
 
+    public static final String WALLET_INLINE_TEXT = "wallet.inline.text";
+
     public static final String ADD_POSTPONED_DEPARTURE_DETAILS_INLINE_TEXT = "add.postponed.departure.details.inline.text";
 
     public static final String LIKE_RIDE_INLINE_TEXT = "\uD83D\uDC4D";

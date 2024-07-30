@@ -31,6 +31,7 @@
 * **Cross-plarform**. Use it on any device where Telegram is installed.
 * **Simplicity**. Request a ride just in several clicks and all drivers near-by will recieve it.
 * **Price calculation**. You can always rely on our price calculations or set your own price, even request a free ride!
+* **Rating system**. Rate drivers and passengers after each ride, fostering trust and safety within our community.
 
 ## How It Works
 1. You set up a profile and choose a role (driver or passenger).

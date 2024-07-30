@@ -109,6 +109,8 @@ public class TextMessages {
 
     public static final String ADD_REVIEW_ON_DRIVER_FOR_PASSENGERS_MESSAGE = "add.review.on.driver.for.passengers.message";
 
+    public static final String PAYMENT_REMINDER_MESSAGE = "payment.reminder.message";
+
 
     //DRIVER
     public static final String REQUEST_DRIVER_LOCATION_MESSAGE = "request.driver.location.message";
