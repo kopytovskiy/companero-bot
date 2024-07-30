@@ -47,6 +47,18 @@ public class InlineKeyboardHelper {
                 .keyboardRow(new InlineKeyboardRow(openDestinationPoint)).build();
     }
 
+    public static InlineKeyboardMarkup openWallet(Long passengerId) {
+        CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
+
+        InlineKeyboardButton openWalletButton = InlineKeyboardButton.builder()
+                .text(LocalizationHelper.getValueByCode(WALLET_INLINE_TEXT, passengerLocale))
+                .url("https://t.me/wallet")
+                .build();
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(openWalletButton)).build();
+    }
+
 
     public static SendMessage passengerContactsMarkupKeyboard(Long driverId, Long passengerId, String message) {
         CountryCode driverLocale = UserCollection.getUserLocale(driverId);
