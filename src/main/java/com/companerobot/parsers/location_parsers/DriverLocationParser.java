@@ -136,25 +136,6 @@ public class DriverLocationParser {
             );
         }
 
-//        if (passengerUserTag == null) { //TODO: Refactor to StringBuilder
-//            if (isPhoneNumberHidden) {
-//                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_TAG_AND_NUMBER_MESSAGE, driverLocale).formatted(passengerName));
-//            } else {
-//                sendMessageToUser(driverId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber));
-//            }
-//        } else {
-//            if (isPhoneNumberHidden) {
-//                sendMessageExecutor(
-//                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITHOUT_NUMBER_MESSAGE, driverLocale).formatted(passengerName))
-//                );
-//
-//            } else {
-//                sendMessageExecutor(
-//                        InlineKeyboardHelper.passengerContactsMarkupKeyboard(driverId, passengerId, LocalizationHelper.getValueByCode(PASSENGER_INFO_WITH_NUMBER_MESSAGE, driverLocale).formatted(passengerName, passengerPhoneNumber))
-//                );
-//            }
-//        }
-
         sendMessageExecutor(ReplyKeyboardHelper.driverAcceptedOrderKeyboard(driverId, LocalizationHelper.getValueByCode(FUTURE_ARRIVAL_REMINDER_MESSAGE, driverLocale)
                 .formatted(LocalizationHelper.getValueByCode(CONFIRM_ARRIVAL_HOOK_MESSAGE, driverLocale))));
     }
