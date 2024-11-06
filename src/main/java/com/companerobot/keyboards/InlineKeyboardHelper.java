@@ -52,7 +52,7 @@ public class InlineKeyboardHelper {
 
         InlineKeyboardButton openWalletButton = InlineKeyboardButton.builder()
                 .text(LocalizationHelper.getValueByCode(WALLET_INLINE_TEXT, passengerLocale))
-                .url("https://t.me/wallet")
+                .url("https://t.me/wallet/start")
                 .build();
 
         return InlineKeyboardMarkup.builder()

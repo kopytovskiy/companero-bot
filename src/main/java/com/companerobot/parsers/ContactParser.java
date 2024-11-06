@@ -3,6 +3,7 @@ package com.companerobot.parsers;
 import com.companerobot.enums.CountryCode;
 import com.companerobot.enums.UserStatus;
 import com.companerobot.helpers.LocalizationHelper;
+import com.companerobot.helpers.RestrictionHelper;
 import com.companerobot.keyboards.ReplyKeyboardHelper;
 import com.companerobot.keyboards.UserManagementReplyKeyboards;
 import com.companerobot.misc.UserCollection;
@@ -20,6 +21,12 @@ public class ContactParser {
         Long currentUserId = message.getFrom().getId();
         CountryCode userLocale = UserCollection.getUserLocale(currentUserId);
         UserStatus userStatus = UserCollection.getUserStatus(currentUserId);
+        String userPhoneNumber = message.getContact().getPhoneNumber();
+
+        if (RestrictionHelper.isRestrictedPhoneNumber(userPhoneNumber)) {
+            sendMessageToUser(currentUserId, LocalizationHelper.getValueByCode(RESTRICTED_PHONE_NUMBER_MESSAGE, userLocale));
+            return;
+        }
 
         if (userStatus == WAITING_USER_CONTACT) {
             addUserNumberAtRegistration(message, currentUserId, userLocale);

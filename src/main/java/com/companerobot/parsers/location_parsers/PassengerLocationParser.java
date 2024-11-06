@@ -24,14 +24,20 @@ public class PassengerLocationParser {
         Long passengerId = message.getFrom().getId();
         CountryCode passengerLocale = UserCollection.getUserLocale(passengerId);
         Document order = OrderCollection.getUnfinishedOrderByPassengerId(passengerId);
+
+        if (order == null) {
+            return;
+        }
+
         OrderStatus orderStatus = OrderStatus.valueOf(order.get("orderStatus").toString());
 
         if (orderStatus == WAITING_PICKUP_ADDRESS) {
             setPickupPoint(message, passengerId, passengerLocale);
 
         } else if (orderStatus == WAITING_DESTINATION_ADDRESS) {
-            setDestinationPoint(message, passengerId, passengerLocale);
+            setDestinationPoint(message, passengerId);
         }
+
     }
 
 
@@ -49,7 +55,7 @@ public class PassengerLocationParser {
     }
 
 
-    private static void setDestinationPoint(Message message, Long passengerId, CountryCode passengerLocale) {
+    private static void setDestinationPoint(Message message, Long passengerId) {
         JSONObject destinationAddressResponse = AddressHelper.getAddressByCoordinates(message.getLocation().getLatitude(), message.getLocation().getLongitude(), 18);
         Document order = OrderCollection.getOrderByPassengerIdAndStatus(passengerId, WAITING_DESTINATION_ADDRESS);
         String orderId = order.get("orderId").toString();
