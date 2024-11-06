@@ -53,6 +53,10 @@ public class TextMessages {
 
     public static final String FURTHER_CONTACTS_POSTPONED_MESSAGE = "further.contacts.postponed.message";
 
+    public static final String RESTRICTED_LOCATION_MESSAGE = "restricted.location.message";
+
+    public static final String RESTRICTED_PHONE_NUMBER_MESSAGE = "restricted.phone.number.message";
+
 
     //PASSENGER MESSAGES
     public static final String PASSENGER_ROLE_WELCOME_MESSAGE = "passenger.role.welcome.message";
