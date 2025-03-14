@@ -1,4 +1,4 @@
-<div align="center"><img width="200" alt="Companero" src="https://companero.io/assets/images/logo/logo.png"/></div>
+<div align="center"><img width="200" alt="Companero" src="https://companero.io/assets/images/logo/logo.webp"/></div>
 <br/>
 <p align="center">
    <i>Compañero is an open-source ridesharing and hitchhiking service. Find a travel companion without any expenses!</i>
