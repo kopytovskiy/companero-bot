@@ -18,8 +18,7 @@ import org.bson.Document;
 import org.json.JSONObject;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
-import static com.companerobot.constants.HookMessages.CONFIRM_ARRIVAL_HOOK_MESSAGE;
-import static com.companerobot.constants.HookMessages.START_WORK_SHIFT_HOOK_MESSAGE;
+import static com.companerobot.constants.HookMessages.*;
 import static com.companerobot.constants.TextMessages.*;
 import static com.companerobot.enums.DriverInfoFillingStatus.*;
 import static com.companerobot.enums.OrderStatus.DRIVER_ACCEPTED;
@@ -69,9 +68,10 @@ public class DriverLocationParser {
         DriverCollection.setDriverInfoFillingStatus(driverId, INFO_IS_FILLED);
 
         sendMessageToUser(driverId, LocalizationHelper.getValueByCode(CAR_INFO_REGISTRATION_FINISHED_MESSAGE, driverLocale));
+        DriverCollection.setIsWaitingForNewTrip(driverId, true);
         sendMessageExecutor(
-                ReplyKeyboardHelper.mainMenuDriverGetOrdersKeyboard(driverId, LocalizationHelper.getValueByCode(START_SHIFT_MESSAGE, driverLocale)
-                        .formatted(LocalizationHelper.getValueByCode(START_WORK_SHIFT_HOOK_MESSAGE, driverLocale)))
+                ReplyKeyboardHelper.mainMenuDriverHideOrdersKeyboard(driverId, LocalizationHelper.getValueByCode(STOP_SHIFT_MESSAGE, driverLocale)
+                        .formatted(LocalizationHelper.getValueByCode(STOP_WORK_SHIFT_HOOK_MESSAGE, driverLocale)))
         );
     }
 
