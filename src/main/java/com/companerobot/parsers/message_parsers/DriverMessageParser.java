@@ -437,7 +437,8 @@ public class DriverMessageParser {
             DriverCollection.setCarNumber(driverId, message.getText());
             DriverCollection.setDriverInfoFillingStatus(driverId, WAITING_LOCATION);
             sendMessageExecutor(
-                    ReplyKeyboardHelper.requestLocationWithButton(driverId, LocalizationHelper.getValueByCode(DRIVER_LOCATION_REQUEST_MESSAGE, driverLocale))
+                    ReplyKeyboardHelper.requestLocationWithButton(driverId, LocalizationHelper.getValueByCode(DRIVER_LOCATION_REQUEST_MESSAGE, driverLocale)
+                            .formatted(LocalizationHelper.getValueByCode(SHARE_LOCATION_HOOK_MESSAGE, driverLocale)))
             );
         }
     }
